@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    build: './db'
+    environment:
+      POSTGRES_PASSWORD: 'postgres'
+    ports:
+      - '5432:5432'
+    volumes:
+      - './db/spec:/mnt/spec:delegated'
+      - 'pgdata:/mnt/pgdata'
+  main:
+    build:
+      context: './main'
+      target: 'development'
+    ports:
+      # Caddy forward
+      - '3456:34560'
+      - '36851:36851'
+    depends_on:
+      - 'db'
+    volumes:
+      - './main:/app:delegated'
+      - 'main_tmp:/mnt/tmp'
+      - 'main_ruby_bundle:/usr/local/bundle'
+      - 'main_xdg_cache:/home/node/.cache'
+      - 'main_xdg_config:/home/node/.config'
+    env_file: './.docker-env'
+    environment:
+      - 'DATABASE_URL=postgres://postgres:postgres@db:5432/postgres'
+      - 'PORT=3000'
+    command: ["/bin/bash"]
+    stdin_open: true
+    tty: true
+
+volumes:
+  pgdata:
+  main_tmp:
+  main_ruby_bundle:
+  main_xdg_cache:
+  main_xdg_config:
