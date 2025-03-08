@@ -4,7 +4,7 @@ import { CreateReadingDto } from './dto/create-reading.dto';
 import { UpdateReadingDto } from './dto/update-reading.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Reading } from './entities/reading.entity';
-import { Repository, Between, Equal } from 'typeorm';
+import { Repository, Between, Equal, FindOptionsWhere } from 'typeorm';
 import { Department } from '../departments/entities/department.entity';
 import { ActiveReadingDto } from './dto/active-reading.dto';
 
@@ -61,12 +61,13 @@ export class ReadingsService {
     });
   }
 
-  findAllByUser(userId: number): Promise<Reading[]> {
+  findAllByUser(userId: number, options: FindOptionsWhere<Reading>): Promise<Reading[]> {
     return this.readingsRepository.find({
       where: {
         user: {
           id: userId
-        }
+        },
+        ...options
       },
       relations: {
         user: true,
@@ -83,6 +84,21 @@ export class ReadingsService {
       .map((_, index) => {
         const date = new Date(now);
         date.setDate(date.getDate() + index);
+        return date;
+      });
+
+    return Promise.all(days.map(date => {
+      return this.findByDate(date, department);
+    }))
+  }
+
+  findInactiveReadings(department: Department): Promise<ActiveReadingDto[]> {
+    const now = new Date();
+    const days = new Array(this.ACTIVE_READINGS_DAYS_COUNT)
+      .fill(0)
+      .map((_, index) => {
+        const date = new Date(now);
+        date.setDate(date.getDate() - (index + 1));
         return date;
       });
 

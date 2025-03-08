@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ReadingsService } from './readings.service';
-import { CreateReadingDto } from './dto/create-reading.dto';
 import { UpdateReadingDto } from './dto/update-reading.dto';
 import { DepartmentsService } from '../departments/departments.service';
 import { UsersService } from '../users/users.service';
+import { Between } from 'typeorm';
+import { endOfDay, startOfDay } from 'date-fns';
 
 @Controller('readings')
 export class ReadingsController {
@@ -60,9 +61,26 @@ export class ReadingsController {
     return this.readingsService.findActiveReadings(department);
   }
 
+  @Get('/department/:id/inactive')
+  async findInactiveByDepartment(@Param('id') departmentId: string) {
+    const department = await this.departmentsService.findOne(+departmentId);
+
+    if (!department) {
+      throw new Error('Department not found');
+    }
+
+    return this.readingsService.findInactiveReadings(department);
+  }
+
   @Get('user/:id')
-  findByUser(@Param('id') id: string) {
-    return this.readingsService.findAllByUser(+id);
+  findByUser(
+    @Param('id') id: string,
+    @Query('from') from: string,
+    @Query('to') to: string
+  ) {
+    return this.readingsService.findAllByUser(+id, from && to ? {
+      date: Between(startOfDay(new Date(from)), endOfDay(new Date(to)))
+    } : {});
   }
 
   @Patch(':id')
