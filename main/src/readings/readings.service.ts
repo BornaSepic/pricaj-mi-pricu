@@ -45,7 +45,23 @@ export class ReadingsService {
     return `This action returns all readings`;
   }
 
-  findAllByUser(userId: number) {
+  findOneByUserAndId(userId: number, id: number): Promise<Reading | null> {
+    return this.readingsRepository.findOne({
+      where: {
+        id: id,
+        user: {
+          id: userId
+        }
+      },
+      relations: {
+        user: true,
+        department: true,
+        report: true
+      }
+    });
+  }
+
+  findAllByUser(userId: number): Promise<Reading[]> {
     return this.readingsRepository.find({
       where: {
         user: {
@@ -54,12 +70,13 @@ export class ReadingsService {
       },
       relations: {
         user: true,
-        department: true
+        department: true,
+        report: true
       }
     });
   }
 
-  findActiveReadings(department: Department) {
+  findActiveReadings(department: Department): Promise<ActiveReadingDto[]> {
     const now = new Date();
     const days = new Array(this.ACTIVE_READINGS_DAYS_COUNT)
       .fill(0)

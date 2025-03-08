@@ -3,11 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DepartmentsModule } from './departments/departments.module';
-import { Department } from './departments/entities/department.entity';
 import { UsersModule } from './users/users.module';
 import { ReadingsModule } from './readings/readings.module';
+import { Department } from './departments/entities/department.entity';
 import { User } from './users/entities/user.entity';
 import { Reading } from './readings/entities/reading.entity';
+import { Report } from './reports/entities/report.entity';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -17,7 +19,8 @@ import { Reading } from './readings/entities/reading.entity';
       entities: [
         Department,
         User,
-        Reading
+        Reading,
+        Report
       ],
       synchronize: true,
       autoLoadEntities: true,
@@ -25,8 +28,9 @@ import { Reading } from './readings/entities/reading.entity';
     DepartmentsModule,
     UsersModule,
     ReadingsModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
