@@ -1,0 +1,24 @@
+### Render.com infrastructure blueprint
+
+services:
+  # A Docker web service
+  - type: web
+    name: pricaj-mi-pricu
+    runtime: docker
+    region: ohio
+    plan: standard
+    branch: main
+    numInstances: 1
+    dockerfilePath: ./main/Dockerfile
+    dockerContext: ./main
+    pullRequestPreviewsEnabled: false
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pricaj-mi-pricu-db
+          property: connectionString
+      
+databases:
+  - name: pricaj-mi-pricu-db
+    region: frankfurt
+    postgresMajorVersion: "16"
