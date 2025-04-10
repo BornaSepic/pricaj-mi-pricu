@@ -78,9 +78,10 @@ export class ReadingsController {
     @Query('from') from: string,
     @Query('to') to: string
   ) {
-    return this.readingsService.findAllByUser(+id, from && to ? {
-      date: Between(startOfDay(new Date(from)), endOfDay(new Date(to)))
-    } : {});
+    return this.readingsService.findAllByUser(+id, {
+      from: from ? new Date(from) : null,
+      to: to ? new Date(to) : null
+    });
   }
 
   @Patch(':id')

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 export class CreateReportBodyDto {
   title: string;

@@ -7,6 +7,8 @@ import { Reading } from './entities/reading.entity';
 import { Repository, Between, Equal, FindOptionsWhere } from 'typeorm';
 import { Department } from '../departments/entities/department.entity';
 import { ActiveReadingDto } from './dto/active-reading.dto';
+import { FindAllByUserDto } from './dto/find-all-by-user.dto';
+import { createDateFilter } from '../helpers/date/filter';
 
 @Injectable()
 export class ReadingsService {
@@ -42,7 +44,7 @@ export class ReadingsService {
   }
 
   findAll() {
-    return `This action returns all readings`;
+    return this.readingsRepository.find();
   }
 
   findOneByUserAndId(userId: number, id: number): Promise<Reading | null> {
@@ -61,13 +63,13 @@ export class ReadingsService {
     });
   }
 
-  findAllByUser(userId: number, options: FindOptionsWhere<Reading>): Promise<Reading[]> {
+  findAllByUser(userId: number, options: FindAllByUserDto): Promise<Reading[]> {
     return this.readingsRepository.find({
       where: {
         user: {
           id: userId
         },
-        ...options
+        ...createDateFilter
       },
       relations: {
         user: true,
