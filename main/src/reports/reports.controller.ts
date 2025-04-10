@@ -1,8 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { ReportsService } from './reports.service';
-import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
-import { UsersService } from '../users/users.service';
 import { ReadingsService } from '../readings/readings.service';
 import { CreateReportBodyDto } from './dto/create-report-body.dto';
 
@@ -17,10 +15,10 @@ export class ReportsController {
     const reading = await this.readingsService.findOneByUserAndId(createReportDto.userId, createReportDto.readingId);
 
     if (!reading) {
-      throw new Error('Reading not found');
+      throw new HttpException('Reading not found', HttpStatus.NOT_FOUND);
     }
 
-    if(reading.report) {
+    if (reading.report) {
       return this.reportsService.update(reading.report.id, {
         title: createReportDto.title,
         description: createReportDto.description
@@ -46,7 +44,10 @@ export class ReportsController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateReportDto: UpdateReportDto) {
-    return this.reportsService.update(+id, updateReportDto);
+    return this.reportsService.update(+id, updateReportDto)
+      .catch((err) => {
+        throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
+      });
   }
 
   @Delete(':id')

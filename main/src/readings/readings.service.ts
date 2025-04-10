@@ -1,5 +1,5 @@
 import { startOfDay, endOfDay } from 'date-fns';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateReadingDto } from './dto/create-reading.dto';
 import { UpdateReadingDto } from './dto/update-reading.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -108,14 +108,19 @@ export class ReadingsService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} reading`;
+    return this.readingsRepository.findOne({
+      where: { id },
+    })
   }
 
   update(id: number, updateReadingDto: UpdateReadingDto) {
-    return `This action updates a #${id} reading`;
+    return this.readingsRepository.update(id, updateReadingDto)
+      .catch((err) => {
+        throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
+      });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} reading`;
+    return this.readingsRepository.delete(id);
   }
 }

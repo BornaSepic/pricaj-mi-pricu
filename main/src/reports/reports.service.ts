@@ -27,7 +27,7 @@ export class ReportsService {
   }
 
   update(id: number, updateReportDto: UpdateReportDto) {
-    return this.reportsRepository.update(id, updateReportDto);
+    return this.reportsRepository.update(id, updateReportDto)
   }
 
   remove(id: number) {

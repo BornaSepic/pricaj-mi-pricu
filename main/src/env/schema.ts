@@ -3,6 +3,7 @@ import { z } from "zod";
 export const EnvSchema = z.object({
   JWT_SECRET: z.string(),
   DATABASE_URL: z.string(),
+  PORT: z.string()
 })
 
 export const parseRawEnv = (rawEnv: unknown) => {
