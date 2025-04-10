@@ -29,7 +29,6 @@ services:
     env_file: './.docker-env'
     environment:
       - 'DATABASE_URL=postgres://postgres:postgres@db:5432/postgres'
-      - 'PORT=3000'
     command: ["/bin/bash"]
     stdin_open: true
     tty: true

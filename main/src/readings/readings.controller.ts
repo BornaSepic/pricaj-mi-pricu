@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpException, HttpStatus } from '@nestjs/common';
 import { ReadingsService } from './readings.service';
 import { UpdateReadingDto } from './dto/update-reading.dto';
 import { DepartmentsService } from '../departments/departments.service';
@@ -23,13 +23,13 @@ export class ReadingsController {
     const user = await this.usersService.findOne(createReadingDto.userId);
 
     if (!user) {
-      throw new Error('User not found');
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     const department = await this.departmentsService.findOne(createReadingDto.departmentId);
 
     if (!department) {
-      throw new Error('Department not found');
+      throw new HttpException('Department not found', HttpStatus.NOT_FOUND);
     }
 
     return this.readingsService.create({
@@ -55,7 +55,7 @@ export class ReadingsController {
     const department = await this.departmentsService.findOne(+departmentId);
 
     if (!department) {
-      throw new Error('Department not found');
+      throw new HttpException('Department not found', HttpStatus.NOT_FOUND);
     }
 
     return this.readingsService.findActiveReadings(department);
@@ -66,7 +66,7 @@ export class ReadingsController {
     const department = await this.departmentsService.findOne(+departmentId);
 
     if (!department) {
-      throw new Error('Department not found');
+      throw new HttpException('Department not found', HttpStatus.NOT_FOUND);
     }
 
     return this.readingsService.findInactiveReadings(department);
@@ -85,7 +85,7 @@ export class ReadingsController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateReadingDto: UpdateReadingDto) {
-    return this.readingsService.update(+id, updateReadingDto);
+    return this.readingsService.update(+id, updateReadingDto)
   }
 
   @Delete(':id')

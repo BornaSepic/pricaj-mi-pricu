@@ -27,7 +27,7 @@ export class DepartmentsService {
   }
 
   update(id: number, updateDepartmentDto: UpdateDepartmentDto) {
-    return this.departmentsRepository.update(id, updateDepartmentDto);
+    return this.departmentsRepository.update(id, updateDepartmentDto)
   }
 
   remove(id: number) {
