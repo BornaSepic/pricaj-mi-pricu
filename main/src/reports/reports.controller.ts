@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Query } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { UpdateReportDto } from './dto/update-report.dto';
 import { ReadingsService } from '../readings/readings.service';
@@ -33,8 +33,16 @@ export class ReportsController {
   }
 
   @Get()
-  findAll() {
-    return this.reportsService.findAll();
+  findAll(
+    @Query('from') from: string,
+    @Query('to') to: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.reportsService.findAll({
+      from: from ? new Date(from) : null,
+      to:  to ? new Date(to) : null,
+      userId: userId ? +userId : null
+    });
   }
 
   @Get(':id')
