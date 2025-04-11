@@ -10,7 +10,7 @@ async function bootstrap() {
   );
 
   app.useGlobalPipes(new ValidationPipe());
-
+  app.enableCors();
   app.useStaticAssets(join('public'));
   app.setBaseViewsDir(join('views'));
   app.setViewEngine('hbs');
