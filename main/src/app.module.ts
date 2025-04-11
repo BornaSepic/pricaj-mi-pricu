@@ -12,9 +12,10 @@ import { Report } from './reports/entities/report.entity';
 import { ReportsModule } from './reports/reports.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { ConfigModule } from '@nestjs/config';
 import { parseRawEnv } from './env/schema';
+import { AuthGuard } from './auth/auth.guard';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -40,10 +41,10 @@ import { parseRawEnv } from './env/schema';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService,
+  providers: [AppService, JwtService,
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      useClass: AuthGuard,
     }
   ],
 })
