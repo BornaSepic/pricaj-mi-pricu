@@ -30,6 +30,7 @@ export class AuthService {
     if (user?.password !== pass) {
       throw new UnauthorizedException();
     }
+
     const payload = { 
       email: user.email, 
       sub: user.id
