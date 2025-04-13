@@ -4,7 +4,6 @@ import { UpdateReportDto } from './dto/update-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Report } from './entities/report.entity';
 import { Repository } from 'typeorm';
-import { FindReportsDto } from './dto/find-reports.dto';
 import { createDateFilter } from '../helpers/date/filter';
 
 @Injectable()
@@ -18,11 +17,15 @@ export class ReportsService {
     return this.reportsRepository.save(createReportDto);
   }
 
-  findAll(findReportsDto: FindReportsDto) {
+  findAll(findReportsDto: {
+    from: Date | null;
+    to: Date | null;
+  }) {
     return this.reportsRepository.find(
       {
         where: {
           ...createDateFilter('created_at', findReportsDto.from, findReportsDto.to),
+
         }
       }
     );

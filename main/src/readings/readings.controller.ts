@@ -7,6 +7,8 @@ import { CreateReadingDto } from './dto/create-reading.dto';
 import { GetReadingByIdDto } from './dto/get-reading-by-id.dto';
 import { GetReadingByDepartmentDto } from './dto/get-reading-by-department.dto';
 import { FindAllByUserDto, FindAllByUserQueryDto } from './dto/find-all-by-user.dto';
+import { User } from '../decorators/user.decorator';
+import { NullableUser } from '../users/entities/user.entity';
 
 @Controller('readings')
 export class ReadingsController {
@@ -16,9 +18,10 @@ export class ReadingsController {
   ) { }
 
   @Post()
-  async create(@Body() createReadingDto: CreateReadingDto) {
-    const user = await this.usersService.findOne(createReadingDto.userId);
-
+  async create(
+    @User() user: NullableUser,
+    @Body() createReadingDto: CreateReadingDto
+) {
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }

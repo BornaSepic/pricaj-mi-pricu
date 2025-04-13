@@ -3,6 +3,8 @@ import { ReportsService } from './reports.service';
 import { UpdateReportDto } from './dto/update-report.dto';
 import { ReadingsService } from '../readings/readings.service';
 import { CreateReportBodyDto } from './dto/create-report-body.dto';
+import { User } from '../decorators/user.decorator';
+import { NullableUser } from '../users/entities/user.entity';
 
 @Controller('reports')
 export class ReportsController {
@@ -11,8 +13,15 @@ export class ReportsController {
   ) { }
 
   @Post()
-  async create(@Body() createReportDto: CreateReportBodyDto) {
-    const reading = await this.readingsService.findOneByUserAndId(createReportDto.userId, createReportDto.readingId);
+  async create(
+    @User() user: NullableUser,
+    @Body() createReportDto: CreateReportBodyDto
+) {
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const reading = await this.readingsService.findOneByUserAndId(user.id, createReportDto.readingId);
 
     if (!reading) {
       throw new HttpException('Reading not found', HttpStatus.NOT_FOUND);
@@ -29,19 +38,6 @@ export class ReportsController {
       title: createReportDto.title,
       description: createReportDto.description,
       reading: reading
-    });
-  }
-
-  @Get()
-  findAll(
-    @Query('from') from: string,
-    @Query('to') to: string,
-    @Query('userId') userId: string,
-  ) {
-    return this.reportsService.findAll({
-      from: from ? new Date(from) : null,
-      to:  to ? new Date(to) : null,
-      userId: userId ? +userId : null
     });
   }
 

@@ -33,3 +33,7 @@ export class User {
   @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
   public updated_at: Date;
 }
+
+export type NullableUser = User | null;
+
+
