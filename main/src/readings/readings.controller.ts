@@ -3,8 +3,10 @@ import { ReadingsService } from './readings.service';
 import { UpdateReadingDto } from './dto/update-reading.dto';
 import { DepartmentsService } from '../departments/departments.service';
 import { UsersService } from '../users/users.service';
-import { Between } from 'typeorm';
-import { endOfDay, startOfDay } from 'date-fns';
+import { CreateReadingDto } from './dto/create-reading.dto';
+import { GetReadingByIdDto } from './dto/get-reading-by-id.dto';
+import { GetReadingByDepartmentDto } from './dto/get-reading-by-department.dto';
+import { FindAllByUserDto, FindAllByUserQueryDto } from './dto/find-all-by-user.dto';
 
 @Controller('readings')
 export class ReadingsController {
@@ -14,12 +16,7 @@ export class ReadingsController {
   ) { }
 
   @Post()
-  async create(@Body() createReadingDto: {
-    userId: number,
-    departmentId: number,
-    date: string
-  }) {
-
+  async create(@Body() createReadingDto: CreateReadingDto) {
     const user = await this.usersService.findOne(createReadingDto.userId);
 
     if (!user) {
@@ -46,13 +43,13 @@ export class ReadingsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.readingsService.findOne(+id);
+  findOne(@Param() params: GetReadingByIdDto) {
+    return this.readingsService.findOne(Number(params.id));
   }
 
   @Get('/department/:id/active')
-  async findActiveByDepartment(@Param('id') departmentId: string) {
-    const department = await this.departmentsService.findOne(+departmentId);
+  async findActiveByDepartment(@Param() params: GetReadingByDepartmentDto) {
+    const department = await this.departmentsService.findOne(Number(params.id));
 
     if (!department) {
       throw new HttpException('Department not found', HttpStatus.NOT_FOUND);
@@ -62,8 +59,8 @@ export class ReadingsController {
   }
 
   @Get('/department/:id/inactive')
-  async findInactiveByDepartment(@Param('id') departmentId: string) {
-    const department = await this.departmentsService.findOne(+departmentId);
+  async findInactiveByDepartment(@Param() params: GetReadingByDepartmentDto) {
+    const department = await this.departmentsService.findOne(Number(params.id));
 
     if (!department) {
       throw new HttpException('Department not found', HttpStatus.NOT_FOUND);
@@ -74,13 +71,12 @@ export class ReadingsController {
 
   @Get('user/:id')
   findByUser(
-    @Param('id') id: string,
-    @Query('from') from: string,
-    @Query('to') to: string
+    @Param() params: FindAllByUserDto,
+    @Query() query: FindAllByUserQueryDto,
   ) {
-    return this.readingsService.findAllByUser(+id, {
-      from: from ? new Date(from) : null,
-      to: to ? new Date(to) : null
+    return this.readingsService.findAllByUser(+params.id, {
+      from: query.from ? new Date(query.from) : null,
+      to: query.to ? new Date(query.to) : null
     });
   }
 

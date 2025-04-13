@@ -1,9 +1,12 @@
-import { Department } from "../../departments/entities/department.entity";
-import { User } from "../../users/entities/user.entity";
+import { IsDateString, IsNumber } from "class-validator";
 
 export class CreateReadingDto {
-  user?: User;
-  department: Department;
-  date: Date;
-  blocked: boolean;
+  @IsNumber()
+  departmentId: number;
+
+  @IsNumber()
+  userId: number;
+
+  @IsDateString()
+  date: string;
 }

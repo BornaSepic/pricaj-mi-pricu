@@ -1,14 +1,13 @@
 import { startOfDay, endOfDay } from 'date-fns';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateReadingDto } from './dto/create-reading.dto';
 import { UpdateReadingDto } from './dto/update-reading.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Reading } from './entities/reading.entity';
-import { Repository, Between, Equal, FindOptionsWhere } from 'typeorm';
+import { Repository, Between } from 'typeorm';
 import { Department } from '../departments/entities/department.entity';
 import { ActiveReadingDto } from './dto/active-reading.dto';
-import { FindAllByUserDto } from './dto/find-all-by-user.dto';
 import { createDateFilter } from '../helpers/date/filter';
+import { CreateReadingPayload } from './types';
 
 @Injectable()
 export class ReadingsService {
@@ -19,7 +18,7 @@ export class ReadingsService {
 
   private ACTIVE_READINGS_DAYS_COUNT = 14
 
-  async create(createReadingDto: CreateReadingDto) {
+  async create(createReadingDto: CreateReadingPayload) {
     return this.readingsRepository.save(createReadingDto);
   }
 
@@ -63,7 +62,10 @@ export class ReadingsService {
     });
   }
 
-  findAllByUser(userId: number, options: FindAllByUserDto): Promise<Reading[]> {
+  findAllByUser(userId: number, options: {
+    from: Date | null,
+    to: Date | null
+  }): Promise<Reading[]> {
     return this.readingsRepository.find({
       where: {
         user: {
