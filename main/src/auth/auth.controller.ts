@@ -12,6 +12,8 @@ import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { Public } from './public.decorator';
 import { UserJwt } from './types/user-jwt';
+import { User } from '../decorators/user.decorator';
+import { NullableUser } from '../users/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -26,18 +28,9 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get('profile')
-  async getProfile(@Request() rawReq: Request) {
-    const {data: req, success} = UserJwt.safeParse(rawReq);
-
-    if(!success) {
-      return {
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'User not found',
-      };
-    }
-
-    const user = await this.authService.getUserById(req.user.sub);
-
+  async getProfile(
+    @User() user: NullableUser
+  ) {
     if(!user) {
       return {
         statusCode: HttpStatus.UNAUTHORIZED,
