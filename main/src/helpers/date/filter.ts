@@ -1,23 +1,15 @@
-import { Between, FindOptionsWhere, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
+import { Between, FindOperator, FindOptionsWhere, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 
-export const createDateFilter = <T>(key: string, from: Date | null, to: Date | null): FindOptionsWhere<T> => {
-  if (!from && !to) {
-    return {};
-  }
-
-  const filter = {}
-
+export const createDateFilter = <T>(from: Date | null, to: Date | null): FindOperator<Date> | undefined => {
   if (!from && to) {
-    filter[key] = LessThanOrEqual(to)
-    return filter
+    return LessThanOrEqual(to)
   }
 
   if (from && !to) {
-    filter[key] = MoreThanOrEqual(from)
-    return filter
+    return MoreThanOrEqual(from)
   }
 
-  filter[key] = Between(from, to)
-
-  return filter
+  if (from && to) {
+    return Between(from, to)
+  }
 }

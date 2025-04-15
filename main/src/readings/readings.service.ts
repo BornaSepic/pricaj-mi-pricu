@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Reading } from './entities/reading.entity';
 import { Repository, Between } from 'typeorm';
 import { Department } from '../departments/entities/department.entity';
-import { ActiveReadingDto } from './dto/active-reading.dto';
+import { ActiveReading } from './types';
 import { createDateFilter } from '../helpers/date/filter';
 import { CreateReadingPayload } from './types';
 
@@ -22,7 +22,7 @@ export class ReadingsService {
     return this.readingsRepository.save(createReadingDto);
   }
 
-  async findByDate(date: Date, department: Department): Promise<ActiveReadingDto> {
+  async findByDate(date: Date, department: Department): Promise<ActiveReading> {
     const readingsOnDate = await this.readingsRepository.find({
       where: {
         date: Between(new Date(startOfDay(date)), new Date(endOfDay(date))),
@@ -81,7 +81,7 @@ export class ReadingsService {
     });
   }
 
-  findActiveReadings(department: Department): Promise<ActiveReadingDto[]> {
+  findActiveReadings(department: Department): Promise<ActiveReading[]> {
     const now = new Date();
     const days = new Array(this.ACTIVE_READINGS_DAYS_COUNT)
       .fill(0)
@@ -96,7 +96,7 @@ export class ReadingsService {
     }))
   }
 
-  findInactiveReadings(department: Department): Promise<ActiveReadingDto[]> {
+  findInactiveReadings(department: Department): Promise<ActiveReading[]> {
     const now = new Date();
     const days = new Array(this.ACTIVE_READINGS_DAYS_COUNT)
       .fill(0)

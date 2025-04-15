@@ -11,7 +11,6 @@ import {
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { Public } from './public.decorator';
-import { UserJwt } from './types/user-jwt';
 import { User } from '../decorators/user.decorator';
 import { NullableUser } from '../users/entities/user.entity';
 

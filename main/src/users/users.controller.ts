@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpS
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from '../decorators/user.decorator';
+import { NullableUser } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -13,13 +15,14 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
+  findOne(
+    @User() user: NullableUser
+  ) {
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+    return user;
   }
 
   @Patch(':id')

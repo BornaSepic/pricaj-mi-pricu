@@ -1,7 +1,12 @@
-import { Reading } from "../../readings/entities/reading.entity";
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateReportDto {
+  @IsString()
   title: string;
+  
+  @IsString()
   description: string;
-  reading: Reading;
+
+  @IsNumber()
+  readingId: number;
 }

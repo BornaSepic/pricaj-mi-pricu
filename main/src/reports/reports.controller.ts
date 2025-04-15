@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpS
 import { ReportsService } from './reports.service';
 import { UpdateReportDto } from './dto/update-report.dto';
 import { ReadingsService } from '../readings/readings.service';
-import { CreateReportBodyDto } from './dto/create-report-body.dto';
+import { CreateReportDto } from './dto/create-report.dto';
 import { User } from '../decorators/user.decorator';
 import { NullableUser } from '../users/entities/user.entity';
 
@@ -15,7 +15,7 @@ export class ReportsController {
   @Post()
   async create(
     @User() user: NullableUser,
-    @Body() createReportDto: CreateReportBodyDto
+    @Body() createReportDto: CreateReportDto
 ) {
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);

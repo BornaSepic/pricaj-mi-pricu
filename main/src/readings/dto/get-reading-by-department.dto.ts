@@ -1,6 +1,9 @@
-import { IsNumberString } from "class-validator";
+import { IsEnum, IsNumberString } from "class-validator";
 
 export class GetReadingByDepartmentDto {
   @IsNumberString()
-  id: string;
+  departmentId: string;
+
+  @IsEnum(['active', 'inactive'])
+  status: 'active' | 'inactive';
 }

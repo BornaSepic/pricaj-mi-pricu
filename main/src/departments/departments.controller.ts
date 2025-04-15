@@ -19,12 +19,15 @@ export class DepartmentsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.departmentsService.findOne(+id);
+    return this.departmentsService.findOne(Number(id));
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDepartmentDto: UpdateDepartmentDto) {
-    return this.departmentsService.update(+id, updateDepartmentDto)
+  update(
+    @Param('id') id: string,
+    @Body() updateDepartmentDto: UpdateDepartmentDto
+  ) {
+    return this.departmentsService.update(Number(id), updateDepartmentDto)
       .catch((err) => {
         throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
       });
