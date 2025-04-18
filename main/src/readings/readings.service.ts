@@ -71,7 +71,7 @@ export class ReadingsService {
         user: {
           id: userId
         },
-        ...createDateFilter
+        date: createDateFilter(options.from, options.to)
       },
       relations: {
         user: true,

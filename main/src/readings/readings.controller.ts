@@ -43,12 +43,7 @@ export class ReadingsController {
     return this.readingsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param() params: GetReadingByIdDto) {
-    return this.readingsService.findOne(Number(params.id));
-  }
-
-  @Get('/list')
+  @Get('list')
   async findActiveByDepartment(@Query() query: GetReadingByDepartmentDto) {
     const department = await this.departmentsService.findOne(Number(query.departmentId));
 
@@ -64,16 +59,21 @@ export class ReadingsController {
   @Get('user')
   findByUser(
     @User() user: NullableUser,
-    @Param() params: FindAllByUserDto,
+    @Query() query: FindAllByUserDto,
   ) {
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     return this.readingsService.findAllByUser(user.id, {
-      from: params.from ? new Date(params.from) : null,
-      to: params.to ? new Date(params.to) : null
+      from: query.from ? new Date(query.from) : null,
+      to: query.to ? new Date(query.to) : null
     });
+  }
+
+  @Get(':id')
+  findOne(@Param() params: GetReadingByIdDto) {
+    return this.readingsService.findOne(Number(params.id));
   }
 
   @Patch(':id')
