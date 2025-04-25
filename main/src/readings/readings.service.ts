@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Reading } from './entities/reading.entity';
 import { Repository, Between } from 'typeorm';
 import { Department } from '../departments/entities/department.entity';
-import { ActiveReading } from './types';
+import { ActiveReading, ReadingsByDate } from './types';
 import { createDateFilter } from '../helpers/date/filter';
 import { CreateReadingPayload } from './types';
 
@@ -62,11 +62,11 @@ export class ReadingsService {
     });
   }
 
-  findAllByUser(userId: number, options: {
+  async findAllByUser(userId: number, options: {
     from: Date | null,
     to: Date | null
-  }): Promise<Reading[]> {
-    return this.readingsRepository.find({
+  }): Promise<ReadingsByDate[]> {
+    const readingsWithinTimeframe = await this.readingsRepository.find({
       where: {
         user: {
           id: userId
@@ -79,6 +79,10 @@ export class ReadingsService {
         report: true
       }
     });
+
+    return Promise.all(readingsWithinTimeframe.map(reading => {
+      return this.findByDate(reading.date, reading.department);
+    }))
   }
 
   findActiveReadings(department: Department): Promise<ActiveReading[]> {

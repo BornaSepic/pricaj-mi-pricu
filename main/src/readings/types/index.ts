@@ -13,3 +13,8 @@ export type ActiveReading = {
   date: Date;
   readings: Reading[];
 }
+
+export type ReadingsByDate = {
+  date: Date;
+  readings: Reading[];
+}
