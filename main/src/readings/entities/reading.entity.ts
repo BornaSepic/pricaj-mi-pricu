@@ -3,7 +3,6 @@ import { User } from '../../users/entities/user.entity';
 import { Department } from '../../departments/entities/department.entity';
 import { Report } from '../../reports/entities/report.entity';
 
-
 @Entity()
 export class Reading {
   @PrimaryGeneratedColumn()

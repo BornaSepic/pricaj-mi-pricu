@@ -16,6 +16,8 @@ import { ConfigModule } from '@nestjs/config';
 import { parseRawEnv } from './env/schema';
 import { AuthGuard } from './auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
+import { EventsModule } from './events/events.module';
+import { Event } from './events/entities/event.entity';
 
 @Module({
   imports: [
@@ -29,7 +31,8 @@ import { JwtService } from '@nestjs/jwt';
         Department,
         User,
         Reading,
-        Report
+        Report,
+        Event
       ],
       synchronize: true,
       autoLoadEntities: true,
@@ -39,6 +42,7 @@ import { JwtService } from '@nestjs/jwt';
     ReadingsModule,
     ReportsModule,
     AuthModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService,
