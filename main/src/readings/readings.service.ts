@@ -19,6 +19,22 @@ export class ReadingsService {
   private ACTIVE_READINGS_DAYS_COUNT = 14
 
   async create(createReadingDto: CreateReadingPayload) {
+    const existingReading = await this.readingsRepository.findOne({
+      where: {
+        date: createReadingDto.date,
+        user: {
+          id: createReadingDto.user.id
+        },
+        department: {
+          id: createReadingDto.department.id
+        }
+      }
+    });
+
+    if (existingReading) {
+      throw new HttpException('Reading already exists', HttpStatus.CONFLICT);
+    }
+
     return this.readingsRepository.save(createReadingDto);
   }
 

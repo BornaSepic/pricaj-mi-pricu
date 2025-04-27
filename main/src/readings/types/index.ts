@@ -3,7 +3,7 @@ import { User } from "../../users/entities/user.entity";
 import { Reading } from "../entities/reading.entity";
 
 export type CreateReadingPayload = {
-  user?: User;
+  user: User;
   department: Department;
   date: Date;
   blocked: boolean;

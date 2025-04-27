@@ -6,7 +6,10 @@ export class Event {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
   title: string;
+
+  @Column()
   description: string;
 
   @CreateDateColumn()
