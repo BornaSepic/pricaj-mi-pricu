@@ -34,7 +34,13 @@ export class UsersService {
         email: email
       },
       select: {
+        id: true,
+        name: true,
+        email: true,
         password: true,
+        role: true,
+        seniority: true,
+        status: true,
       }
     });
   }

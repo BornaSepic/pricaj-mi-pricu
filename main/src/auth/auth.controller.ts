@@ -13,6 +13,7 @@ import { AuthService } from './auth.service';
 import { Public } from './public.decorator';
 import { User } from '../decorators/user.decorator';
 import { NullableUser } from '../users/entities/user.entity';
+import { LogInDto } from './dto/log-in.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -21,7 +22,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Public()
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
+  signIn(@Body() signInDto: LogInDto) {
     return this.authService.signIn(signInDto.email, signInDto.password);
   }
 
