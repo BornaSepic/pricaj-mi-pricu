@@ -31,6 +31,8 @@ export class ReadingsService {
       }
     });
 
+    console.log('existingReading', existingReading, createReadingDto);
+
     if (existingReading) {
       throw new HttpException('Reading already exists', HttpStatus.CONFLICT);
     }

@@ -32,6 +32,9 @@ export class UsersService {
     return this.usersRepository.findOne({
       where: {
         email: email
+      },
+      select: {
+        password: true,
       }
     });
   }

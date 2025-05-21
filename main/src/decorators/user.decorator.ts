@@ -1,6 +1,6 @@
 
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { User as UserEntity} from '../users/entities/user.entity';
+import { User as UserEntity } from '../users/entities/user.entity';
 
 
 export const User = createParamDecorator(
@@ -12,6 +12,10 @@ export const User = createParamDecorator(
       return null;
     }
 
-    return data ? user?.[data] : user;
+    const {
+      password, ...rest
+    } = user;
+
+    return data ? rest?.[data] : rest;
   },
 );
