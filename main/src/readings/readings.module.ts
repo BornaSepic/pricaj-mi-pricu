@@ -11,8 +11,8 @@ import { Report } from '../reports/entities/report.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Reading, Department, User, Report])],
+    TypeOrmModule.forFeature([Reading, Department, Report])],
   controllers: [ReadingsController],
-  providers: [ReadingsService, DepartmentsService, UsersService],
+  providers: [ReadingsService, DepartmentsService],
 })
 export class ReadingsModule { }

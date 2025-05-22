@@ -18,6 +18,8 @@ import { AuthGuard } from './auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { EventsModule } from './events/events.module';
 import { Event } from './events/entities/event.entity';
+import { RegistrationCodesModule } from './registration-codes/registration-codes.module';
+import { RegistrationCode } from './registration-codes/entities/registration-code.entity';
 
 @Module({
   imports: [
@@ -32,7 +34,8 @@ import { Event } from './events/entities/event.entity';
         User,
         Reading,
         Report,
-        Event
+        Event,
+        RegistrationCode
       ],
       synchronize: true,
       autoLoadEntities: true,
@@ -43,6 +46,7 @@ import { Event } from './events/entities/event.entity';
     ReportsModule,
     AuthModule,
     EventsModule,
+    RegistrationCodesModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService,
