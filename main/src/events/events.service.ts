@@ -69,6 +69,9 @@ export class EventsService {
     return this.eventsRepository.find({
       relations: {
         users: true
+      },
+      order: {
+        date: 'ASC'
       }
     })
   }
