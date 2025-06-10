@@ -44,7 +44,7 @@ export class ReadingsController {
   }
 
   @Get('list')
-  async findActiveByDepartment(@Query() query: GetReadingByDepartmentDto) {
+  async findByDepartment(@Query() query: GetReadingByDepartmentDto) {
     const department = await this.departmentsService.findOne(Number(query.departmentId));
 
     if (!department) {

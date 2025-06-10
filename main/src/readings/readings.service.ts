@@ -31,8 +31,6 @@ export class ReadingsService {
       }
     });
 
-    console.log('existingReading', existingReading, createReadingDto);
-
     if (existingReading) {
       throw new HttpException('Reading already exists', HttpStatus.CONFLICT);
     }
@@ -50,7 +48,8 @@ export class ReadingsService {
       },
       relations: {
         user: true,
-        department: true
+        department: true,
+        report: true
       }
     })
 
@@ -134,8 +133,15 @@ export class ReadingsService {
   }
 
   findOne(id: number) {
+    if(!id) {
+      return Promise.resolve(null);
+    }
+
     return this.readingsRepository.findOne({
       where: { id },
+      relations: {
+        report: true,
+      }
     })
   }
 
