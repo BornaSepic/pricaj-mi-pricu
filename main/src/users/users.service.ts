@@ -7,6 +7,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { RegistrationCodesService } from '../registration-codes/registration-codes.service';
 import { JwtService } from '@nestjs/jwt';
+import { EmailsService } from '../emails/emails.service';
 
 @Injectable()
 export class UsersService {
@@ -14,7 +15,8 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private readonly registrationCodeService: RegistrationCodesService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private emailsService: EmailsService
   ) { }
 
   async create(createUserDto: CreateUserDto) {

@@ -20,6 +20,7 @@ import { EventsModule } from './events/events.module';
 import { Event } from './events/entities/event.entity';
 import { RegistrationCodesModule } from './registration-codes/registration-codes.module';
 import { RegistrationCode } from './registration-codes/entities/registration-code.entity';
+import { EmailsService } from './emails/emails.service';
 
 @Module({
   imports: [
@@ -53,7 +54,8 @@ import { RegistrationCode } from './registration-codes/entities/registration-cod
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
-    }
+    },
+    EmailsService
   ],
 })
 export class AppModule { }

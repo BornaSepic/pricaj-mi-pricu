@@ -7,6 +7,7 @@ import { RegistrationCode } from '../registration-codes/entities/registration-co
 import { RegistrationCodesService } from '../registration-codes/registration-codes.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { EmailsService } from '../emails/emails.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, RegistrationCode]), JwtModule.registerAsync({
@@ -19,7 +20,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     inject: [ConfigService],
   })],
   controllers: [UsersController],
-  providers: [UsersService, RegistrationCodesService],
+  providers: [UsersService, RegistrationCodesService, ConfigService, EmailsService],
   exports: [UsersService]
 })
 export class UsersModule { }
