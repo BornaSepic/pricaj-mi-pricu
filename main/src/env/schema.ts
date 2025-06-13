@@ -5,6 +5,7 @@ export const EnvSchema = z.object({
   DATABASE_URL: z.string(),
   PORT: z.string(),
   RESEND_API_KEY: z.string(),
+  FRONTEND_URL: z.string(),
 })
 
 export const parseRawEnv = (rawEnv: unknown) => {

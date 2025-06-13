@@ -8,12 +8,15 @@ import { Repository } from 'typeorm';
 import { RegistrationCodesService } from '../registration-codes/registration-codes.service';
 import { JwtService } from '@nestjs/jwt';
 import { EmailsService } from '../emails/emails.service';
+import { PasswordReset } from './entities/password-reset.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(PasswordReset)
+    private passwordResetRepository: Repository<PasswordReset>,
     private readonly registrationCodeService: RegistrationCodesService,
     private jwtService: JwtService,
     private emailsService: EmailsService
@@ -78,5 +81,45 @@ export class UsersService {
 
   remove(id: number) {
     return this.usersRepository.delete(id)
+  }
+
+  async createPasswordReset(email: string) {
+    const uniqueId = bcrypt.genSaltSync(10);
+    const token = this.jwtService.sign({ uniqueId }, { expiresIn: '1h' });
+
+    await this.passwordResetRepository.save({
+      email,
+      token: token,
+    });
+
+    this.emailsService.sendPasswordResetEmail(email, token);
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    const passwordReset = await this.passwordResetRepository.findOne({
+      where: { token },
+    });
+
+    if (!passwordReset) {
+      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+    }
+
+    if (this.jwtService.verify(token) === false) {
+      throw new HttpException('Token expired', HttpStatus.UNAUTHORIZED);
+    }
+
+    const user = await this.usersRepository.findOne({
+      where: { email: passwordReset.email },
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await this.usersRepository.save(user);
+    await this.passwordResetRepository.delete(passwordReset.id);
+
+    return { message: 'Password reset successfully' };
   }
 }

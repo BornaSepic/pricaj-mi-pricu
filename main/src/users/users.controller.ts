@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -14,6 +14,27 @@ export class UsersController {
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
+  }
+
+  @Public()
+  @Post('create-password-reset')
+  async createPasswordReset(@Body('email') email: string) {
+    return this.usersService.createPasswordReset(email)
+      .catch(err => {
+        throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
+      });
+  }
+
+  @Public()
+  @Put('reset-password')
+  async resetPassword(
+    @Body('token') token: string,
+    @Body('password') password: string
+  ) {
+    return this.usersService.resetPassword(token, password)
+      .catch(err => {
+        throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
+      });
   }
 
   @Get()

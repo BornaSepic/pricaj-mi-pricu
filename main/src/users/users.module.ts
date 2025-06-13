@@ -8,9 +8,10 @@ import { RegistrationCodesService } from '../registration-codes/registration-cod
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EmailsService } from '../emails/emails.service';
+import { PasswordReset } from './entities/password-reset.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, RegistrationCode]), JwtModule.registerAsync({
+  imports: [TypeOrmModule.forFeature([User, PasswordReset, RegistrationCode]), JwtModule.registerAsync({
     imports: [ConfigModule],
     useFactory: async (configService: ConfigService) => {
       return {
