@@ -41,7 +41,7 @@ export class EmailsService {
         <p>Dear User,</p>
         <p>We received a request to reset your password. If you did not make this request, please ignore this email.</p>
         <p>To reset your password, please click the link below:</p>
-        <p><a href="${this.configService.get<string>('FRONTEND_URL')}/reset-password?token=${token}">Reset Password</a></p>
+        <p><a href="${this.configService.get<string>('FRONTEND_URL')}/auth/reset-password?token=${token}">Reset Password</a></p>
         <p>If you have any questions, feel free to contact our support team.</p>
       `
     })
