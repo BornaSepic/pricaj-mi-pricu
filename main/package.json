@@ -20,6 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@aternus/csv-to-xlsx": "2.1.5",
+    "@iwsio/json-csv-node": "6.2.0",
     "@nestjs/axios": "4.0.0",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/common": "^11.0.1",
@@ -39,6 +41,7 @@
     "class-validator": "0.14.1",
     "date-fns": "4.1.0",
     "hbs": "4.2.0",
+    "json-csv": "4.0.18",
     "mysql2": "^3.12.0",
     "passport": "0.7.0",
     "passport-jwt": "4.0.1",

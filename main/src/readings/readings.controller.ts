@@ -8,6 +8,7 @@ import { GetReadingByDepartmentDto } from './dto/get-reading-by-department.dto';
 import { FindAllByUserDto } from './dto/find-all-by-user.dto';
 import { User } from '../decorators/user.decorator';
 import { NullableUser } from '../users/entities/user.entity';
+import { CreateReadingsReportDto } from './dto/create-readings-report.dto';
 
 @Controller('readings')
 export class ReadingsController {
@@ -69,6 +70,31 @@ export class ReadingsController {
       from: query.from ? new Date(query.from) : null,
       to: query.to ? new Date(query.to) : null
     });
+  }
+
+  @Post('create-report')
+  createReadingsReportForFilters(
+    @User() user: NullableUser,
+    @Body() createReadingsReportDto: CreateReadingsReportDto
+  ) {
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const {
+      from, 
+      to,
+      departmentId
+    } = createReadingsReportDto
+
+    return this.readingsService.createReadingReportForFilters(
+      user,
+      {
+        from: from ? new Date(from) : null,
+        to: to ? new Date(to) : null,
+        departmentId: departmentId
+      }
+    )
   }
 
   @Get(':id')

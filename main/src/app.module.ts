@@ -55,7 +55,7 @@ import { EmailsService } from './emails/emails.service';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
-    EmailsService
+    EmailsService,
   ],
 })
 export class AppModule { }

@@ -8,12 +8,15 @@ import { Department } from '../departments/entities/department.entity';
 import { ActiveReading, ReadingsByDate } from './types';
 import { createDateFilter } from '../helpers/date/filter';
 import { CreateReadingPayload } from './types';
+import { EmailsService } from '../emails/emails.service';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class ReadingsService {
   constructor(
     @InjectRepository(Reading)
-    private readingsRepository: Repository<Reading>
+    private readingsRepository: Repository<Reading>,
+    private emailsService: EmailsService
   ) { }
 
   private ACTIVE_READINGS_DAYS_COUNT = 14
@@ -133,7 +136,7 @@ export class ReadingsService {
   }
 
   findOne(id: number) {
-    if(!id) {
+    if (!id) {
       return Promise.resolve(null);
     }
 
@@ -154,5 +157,31 @@ export class ReadingsService {
 
   remove(id: number) {
     return this.readingsRepository.delete(id);
+  }
+
+  public async createReadingReportForFilters(user: User, filters: {
+    from?: Date | null,
+    to?: Date | null,
+    departmentId?: number,
+    userId?: number
+  }) {
+    const readings = await this.readingsRepository.find({
+      where: {
+        user: {
+          id: filters.userId
+        },
+        department: {
+          id: filters.departmentId
+        },
+        date: createDateFilter(filters.from || null, filters.to || null)
+      },
+      relations: {
+        user: true,
+        department: true,
+        report: true
+      }
+    })
+
+    this.emailsService.sendReadingsReport(user.email, readings)
   }
 }

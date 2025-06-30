@@ -12,4 +12,6 @@ export const createDateFilter = <T>(from: Date | null, to: Date | null): FindOpe
   if (from && to) {
     return Between(from, to)
   }
+
+  return undefined
 }
