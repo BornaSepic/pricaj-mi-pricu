@@ -93,6 +93,10 @@ export class UsersService {
     });
 
     this.emailsService.sendPasswordResetEmail(email, token);
+
+    return {
+      success: true
+    }
   }
 
   async resetPassword(token: string, newPassword: string) {
