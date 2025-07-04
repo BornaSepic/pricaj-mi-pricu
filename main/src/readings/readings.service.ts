@@ -53,6 +53,9 @@ export class ReadingsService {
         user: true,
         department: true,
         report: true
+      },
+      order: {
+        date: 'DESC'
       }
     })
 
@@ -97,6 +100,9 @@ export class ReadingsService {
         user: true,
         department: true,
         report: true
+      },
+      order: {
+        date: 'DESC'
       }
     });
 
@@ -179,6 +185,9 @@ export class ReadingsService {
         user: true,
         department: true,
         report: true
+      },
+      order: {
+        date: 'DESC'
       }
     })
 
