@@ -22,6 +22,6 @@ import { PasswordReset } from './entities/password-reset.entity';
   })],
   controllers: [UsersController],
   providers: [UsersService, RegistrationCodesService, ConfigService, EmailsService],
-  exports: [UsersService]
+  exports: [UsersService, TypeOrmModule.forFeature([User, PasswordReset, RegistrationCode]), RegistrationCodesService]
 })
 export class UsersModule { }
