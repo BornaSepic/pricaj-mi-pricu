@@ -48,6 +48,14 @@ export class UsersController {
     return user;
   }
 
+  @Get('/list')
+  findAll() {
+    return this.usersService.safeFindAll()
+      .catch(err => {
+        throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
+      });
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto)

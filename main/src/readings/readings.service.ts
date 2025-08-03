@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Reading } from './entities/reading.entity';
 import { Repository, Between } from 'typeorm';
 import { Department } from '../departments/entities/department.entity';
-import { ActiveReading, ReadingsByDate } from './types';
+import { ActiveReading, BlockReadingPayload, ReadingsByDate } from './types';
 import { createDateFilter } from '../helpers/date/filter';
 import { CreateReadingPayload } from './types';
 import { EmailsService } from '../emails/emails.service';
@@ -16,17 +16,39 @@ export class ReadingsService {
   constructor(
     @InjectRepository(Reading)
     private readingsRepository: Repository<Reading>,
-    private emailsService: EmailsService
+    private emailsService: EmailsService,
   ) { }
 
   private ACTIVE_READINGS_DAYS_COUNT = 14
+
+  async block(blockReadingDto: BlockReadingPayload) {
+    const existingReadingsOnDate = await this.readingsRepository.find({
+      where: {
+        date: blockReadingDto.date
+      }
+    })
+
+    if (existingReadingsOnDate.length > 0) {
+      await Promise.all(existingReadingsOnDate.map(reading => {
+        return this.remove(reading.id);
+      }))
+    }
+
+    return Promise.all(blockReadingDto.departments.map(department => {
+      return this.readingsRepository.save({
+        date: blockReadingDto.date,
+        department: department,
+        blocked: true
+      });
+    }))
+  }
 
   async create(createReadingDto: CreateReadingPayload) {
     const existingReading = await this.readingsRepository.findOne({
       where: {
         date: createReadingDto.date,
         user: {
-          id: createReadingDto.user.id
+          id: createReadingDto.user ? createReadingDto.user.id : undefined
         },
         department: {
           id: createReadingDto.department.id

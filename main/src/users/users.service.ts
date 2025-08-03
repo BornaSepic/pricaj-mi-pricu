@@ -17,7 +17,7 @@ export class UsersService {
     private usersRepository: Repository<User>,
     @InjectRepository(PasswordReset)
     private passwordResetRepository: Repository<PasswordReset>,
-    private readonly registrationCodeService: RegistrationCodesService,
+    private registrationCodeService: RegistrationCodesService,
     private jwtService: JwtService,
     private emailsService: EmailsService
   ) { }
@@ -48,6 +48,20 @@ export class UsersService {
 
   findAll() {
     return this.usersRepository.find();
+  }
+
+  safeFindAll() {
+    return this.usersRepository.find({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        seniority: true,
+        status: true,
+      }
+    });
   }
 
   findOne(id: number) {

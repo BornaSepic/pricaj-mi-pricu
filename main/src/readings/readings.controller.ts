@@ -9,18 +9,39 @@ import { FindAllByUserDto } from './dto/find-all-by-user.dto';
 import { User } from '../decorators/user.decorator';
 import { NullableUser } from '../users/entities/user.entity';
 import { CreateReadingsReportDto } from './dto/create-readings-report.dto';
+import { BlockReadingDto } from './dto/block-reading.dto';
+import { UsersService } from '../users/users.service';
 
 @Controller('readings')
 export class ReadingsController {
-  constructor(private readonly readingsService: ReadingsService,
-    private readonly departmentsService: DepartmentsService
+  constructor(
+    private readonly readingsService: ReadingsService,
+    private readonly departmentsService: DepartmentsService,
+    private readonly usersService: UsersService
   ) { }
+
+  @Post('/block')
+  async blockReading(
+    @User() user: NullableUser,
+    @Body() blockReadingDTO: BlockReadingDto
+  ) {
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const allDepartments = await this.departmentsService.findAll();
+
+    return this.readingsService.block({
+      departments: allDepartments,
+      date: new Date(blockReadingDTO.date)
+    });
+  }
 
   @Post()
   async create(
     @User() user: NullableUser,
     @Body() createReadingDto: CreateReadingDto
-) {
+  ) {
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
@@ -31,9 +52,17 @@ export class ReadingsController {
       throw new HttpException('Department not found', HttpStatus.NOT_FOUND);
     }
 
+    let userToAssign: NullableUser = null;
+
+    if (createReadingDto.userId && createReadingDto.userId !== user.id) {
+      userToAssign = await this.usersService.findOne(createReadingDto.userId);
+    }
+
+    const finalUser = userToAssign || user;
+
     return this.readingsService.create({
       date: new Date(createReadingDto.date),
-      user,
+      user: finalUser,
       department,
       blocked: false
     });
@@ -82,7 +111,7 @@ export class ReadingsController {
     }
 
     const {
-      from, 
+      from,
       to,
       departmentId
     } = createReadingsReportDto
