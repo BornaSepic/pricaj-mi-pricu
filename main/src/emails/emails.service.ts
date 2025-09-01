@@ -103,6 +103,11 @@ export class EmailsService {
         return null
       }
 
+      // Check if static dir exists, and make it if not
+      if (!fs.existsSync('./static')) {
+        fs.mkdirSync('./static');
+      }
+
       fs.writeFileSync(`./static/readings-report-${new Date().toDateString()}.csv`, csv);
 
       let source = `./static/readings-report-${new Date().toDateString()}.csv`;
