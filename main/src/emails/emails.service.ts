@@ -58,7 +58,7 @@ export class EmailsService {
         name: reading.user?.name || 'N/A',
         email: reading.user?.email || 'N/A',
         phone: reading.user?.phone || 'N/A',
-        datum: formattedDate,
+        date: formattedDate,
         department: reading.department.name,
         report: reading.report?.description || 'N/A'
       })
@@ -83,8 +83,8 @@ export class EmailsService {
             label: 'Datum čitanja'
           },
           {
-            name: 'deparment',
-            label: 'odjel'
+            name: 'department',
+            label: 'Odjel'
           },
           {
             name: 'report',
