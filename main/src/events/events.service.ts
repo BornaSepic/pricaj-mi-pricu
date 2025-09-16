@@ -32,11 +32,15 @@ export class EventsService {
     })
 
     if (!event) {
-      throw new HttpException('Event not found', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Događaj nije pronađen.', HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    if (event.users.length >= event.limit) {
+      throw new HttpException('Događaj je popunjen.', HttpStatus.NOT_ACCEPTABLE);
     }
 
     if (event.users.some((u) => u.id === user.id)) {
-      throw new HttpException('User already signed up for this event', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Korisnik je već prijavljen na ovaj događaj.', HttpStatus.NOT_ACCEPTABLE);
     }
 
     event.users.push(user);
@@ -53,11 +57,11 @@ export class EventsService {
     })
 
     if (!event) {
-      throw new HttpException('Event not found', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Događaj nije pronađen.', HttpStatus.NOT_ACCEPTABLE);
     }
 
     if (!event.users.find((u) => u.id === user.id)) {
-      throw new HttpException('User has not signed up for this event', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Korisnik nije prijavljen na ovaj događaj.', HttpStatus.NOT_ACCEPTABLE);
     }
 
     event.users = event.users.filter((u) => u.id !== user.id);

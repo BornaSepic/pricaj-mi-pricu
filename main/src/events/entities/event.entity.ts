@@ -12,6 +12,11 @@ export class Event {
   @Column()
   description: string;
 
+  @Column({
+    default: 10
+  })
+  limit: number;
+
   @CreateDateColumn()
   public date: Date;
 

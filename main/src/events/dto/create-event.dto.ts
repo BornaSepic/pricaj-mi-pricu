@@ -1,4 +1,4 @@
-import { IsDate, IsDateString, IsString } from "class-validator";
+import { IsDate, IsDateString, IsNumber, IsString } from "class-validator";
 
 export class CreateEventDto {
   @IsString()
@@ -9,4 +9,7 @@ export class CreateEventDto {
 
   @IsDateString()
   date: string;
+
+  @IsNumber()
+  limit: number;
 }
