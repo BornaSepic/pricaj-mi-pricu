@@ -16,7 +16,9 @@ export class EventsService {
   ) { }
 
   create(createEventDto: CreateEventDto) {
-    const limit = isNaN(Number(createEventDto.limit)) ? 0 : Number(createEventDto.limit);
+    const limit = typeof createEventDto.limit === 'number' ? 
+      createEventDto.limit : 
+      isNaN(Number(createEventDto.limit)) ? 0 : Number(createEventDto.limit);
 
     return this.eventsRepository.save({
       title: createEventDto.title,
@@ -115,7 +117,9 @@ export class EventsService {
   }
 
   update(id: number, updateEventDto: UpdateEventDto) {
-    const limit = isNaN(Number(updateEventDto.limit)) ? 0 : Number(updateEventDto.limit);
+    const limit = typeof updateEventDto.limit === 'number' ? 
+      updateEventDto.limit : 
+      isNaN(Number(updateEventDto.limit)) ? 0 : Number(updateEventDto.limit);
 
     return this.eventsRepository.update(id, {
       title: updateEventDto.title,
