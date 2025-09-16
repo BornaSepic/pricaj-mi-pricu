@@ -40,7 +40,7 @@ export class EventsService {
       throw new HttpException('Događaj nije pronađen.', HttpStatus.NOT_ACCEPTABLE);
     }
 
-    if (event.users.length >= event.limit) {
+    if (event.limit > 0 && event.users.length >= event.limit) {
       throw new HttpException('Događaj je popunjen.', HttpStatus.NOT_ACCEPTABLE);
     }
 
