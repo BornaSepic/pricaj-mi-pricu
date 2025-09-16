@@ -13,13 +13,13 @@ export class RegistrationCodesController {
   }
 
   @Get()
-  findAll() {
-    return this.registrationCodesService.findAll();
+  find() {
+    return this.registrationCodesService.findActive();
   }
   
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRegistrationCodeDto: UpdateRegistrationCodeDto) {
-    return this.registrationCodesService.update(+id, updateRegistrationCodeDto);
+  @Patch()
+  updateDefault(@Body() updateRegistrationCodeDto: UpdateRegistrationCodeDto) {
+    return this.registrationCodesService.updateDefault(updateRegistrationCodeDto);
   }
 
   @Delete(':id')

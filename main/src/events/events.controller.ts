@@ -41,8 +41,10 @@ export class EventsController {
   }
 
   @Get()
-  findAll() {
-    return this.eventsService.findAll();
+  findAll(
+    @User() user: NullableUser,
+  ) {
+    return this.eventsService.findAll(user);
   }
 
   @Get(':id')

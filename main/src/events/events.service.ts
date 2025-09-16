@@ -3,9 +3,9 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { SignUpForEventDto } from './dto/sign-up-for-event.dto';
-import { User } from '../users/entities/user.entity';
+import { NullableUser, User } from '../users/entities/user.entity';
 import { SignOffEventDto } from './dto/sign-off-event.dto';
 
 @Injectable()
@@ -16,10 +16,13 @@ export class EventsService {
   ) { }
 
   create(createEventDto: CreateEventDto) {
+    const limit = isNaN(Number(createEventDto.limit)) ? 0 : Number(createEventDto.limit);
+
     return this.eventsRepository.save({
       title: createEventDto.title,
       description: createEventDto.description,
-      date: createEventDto.date
+      date: createEventDto.date,
+      limit: limit
     });
   }
 
@@ -69,15 +72,37 @@ export class EventsService {
     return event;
   }
 
-  findAll() {
-    return this.eventsRepository.find({
-      relations: {
-        users: true
-      },
-      order: {
-        date: 'ASC'
-      }
-    })
+  findAll(user: NullableUser) {
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+    }
+
+    const isAdmin = user.role === 'admin';
+
+    if (isAdmin) {
+      return this.eventsRepository.find({
+        relations: {
+          users: true
+        },
+        order: {
+          date: 'ASC'
+        }
+      })
+    } else {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      return this.eventsRepository.find({
+        where: {
+          date: MoreThan(yesterday)
+        },
+        relations: {
+          users: true
+        },
+        order: {
+          date: 'ASC'
+        }
+      })
+    }
   }
 
   findOne(id: number) {
@@ -90,10 +115,13 @@ export class EventsService {
   }
 
   update(id: number, updateEventDto: UpdateEventDto) {
+    const limit = isNaN(Number(updateEventDto.limit)) ? 0 : Number(updateEventDto.limit);
+
     return this.eventsRepository.update(id, {
       title: updateEventDto.title,
       description: updateEventDto.description,
-      date: updateEventDto.date
+      date: updateEventDto.date,
+      limit: limit
     })
   }
 

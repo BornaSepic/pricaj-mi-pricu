@@ -1,3 +1,4 @@
+import { Optional } from "@nestjs/common";
 import { IsDate, IsDateString, IsNumber, IsString } from "class-validator";
 
 export class CreateEventDto {
@@ -10,6 +11,7 @@ export class CreateEventDto {
   @IsDateString()
   date: string;
 
-  @IsNumber()
-  limit: number;
+  @Optional()
+  @IsString()
+  limit: string;
 }

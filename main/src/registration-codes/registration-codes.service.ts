@@ -39,8 +39,31 @@ export class RegistrationCodesService {
     return this.registrationCodeRepository.find();
   }
 
+  findActive() {
+    return this.registrationCodeRepository.findOne({
+      where: {
+        isValid: true
+      }
+    });
+  }
+
   update(id: number, updateRegistrationCodeDto: UpdateRegistrationCodeDto) {
     return this.registrationCodeRepository.update(id, updateRegistrationCodeDto)
+  }
+
+  async updateDefault(updateRegistrationCodeDto: UpdateRegistrationCodeDto) {
+    const defaultRegistrationCode = await this.registrationCodeRepository.findOne({
+      where: {
+        isValid: true
+      }
+    })
+
+    if (!defaultRegistrationCode) {
+      const newRegistrationCode = this.registrationCodeRepository.create(updateRegistrationCodeDto)
+      return this.registrationCodeRepository.save(newRegistrationCode)
+    }
+
+    return this.registrationCodeRepository.update(defaultRegistrationCode.id, updateRegistrationCodeDto)
   }
 
   remove(id: number) {
