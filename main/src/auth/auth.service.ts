@@ -28,7 +28,7 @@ export class AuthService {
 
   async signIn(email: string, pass: string) {
     const user = await this.usersService.findOneByEmail(email);
-    
+
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -39,9 +39,13 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
+    if (user.status === 'inactive') {
+      throw new UnauthorizedException('Korisnik nije aktivan.');
+    }
+
     const { password, ...result } = user;
 
-    const payload = { 
+    const payload = {
       sub: user.id,
       ...result
     };
