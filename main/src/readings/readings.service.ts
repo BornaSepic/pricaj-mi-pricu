@@ -139,6 +139,7 @@ export class ReadingsService {
       .fill(0)
       .map((_, index) => {
         const date = new Date(now);
+        date.setHours(date.getHours() + 2);
         date.setDate(date.getDate() + index);
         return date;
       });
@@ -154,6 +155,7 @@ export class ReadingsService {
       .fill(0)
       .map((_, index) => {
         const date = new Date(now);
+        date.setHours(date.getHours() + 2); 
         date.setDate(date.getDate() - (index + 1));
         return date;
       });
